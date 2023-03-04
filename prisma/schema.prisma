@@ -6,13 +6,13 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql" 
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id       String   @id @default(cuid())
-  name     String
-  email    String
-  createAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  name      String   @db.VarChar(255)
+  email     String   @unique
+  createAt  DateTime @default(now())
 }
