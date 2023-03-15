@@ -82,6 +82,9 @@ _Cria conta no Fly.io ou render.com, no meu caso usei o render_
 _Usa a conta do GitHub mesmo para ter acesso aos repositorios_
 _Cria um novo banco de dados, usei o postgresql_
 _Cria um web service, vai em advanced e coloca a variavel ambiente com o link interno do postgresql que você criou. E também configure os comandos de build e start dessa forma, respectivamnte:_
-_npm ci && npm run build && npx prisma migrate deploy_
-_npm run start_
+_npm ci && npm build && npx prisma migrate deploy_
+_npm start_
+_Depois configure as variaveis ambiente:_
+_banco de dados_ (DATABASE_URL) _com o link do banco postegre interno que você crio_
+_e token_ (JWT_SECRET) _com letras, números e simbolos de sua escolha, para ser sua chave de segurança do token, usada para criptografar e descriptografar os dados de token do back para o front_
 _Pronto! Você criou uma API REST_
