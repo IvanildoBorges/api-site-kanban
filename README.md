@@ -81,5 +81,7 @@ _No arquivo .gitignore vamos adicionar uma execessão para o git ignorar a pasta
 _Cria conta no Fly.io ou render.com, no meu caso usei o render_
 _Usa a conta do GitHub mesmo para ter acesso aos repositorios_
 _Cria um novo banco de dados, usei o postgresql_
-_Cria um web service, vai em advanced e coloca a variavel ambiente com o link interno do postgresql que você criou_
+_Cria um web service, vai em advanced e coloca a variavel ambiente com o link interno do postgresql que você criou. E também configure os comandos de build e start dessa forma, respectivamnte:_
+_npm ci && npm run build && npx prisma migrate deploy_
+_npm run start_
 _Pronto! Você criou uma API REST_

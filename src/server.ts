@@ -6,6 +6,7 @@ import {
 } from 'fastify-type-provider-zod'
 import jwt from '@fastify/jwt'
 import { userRoutes } from './routes/user.routes'
+import { homeRoutes } from './routes/home.routes'
 
 async function main() {
     server.register(cors, { 
@@ -31,6 +32,7 @@ async function main() {
     })
 
     await server.register(userRoutes, { prefix: '/users' })
+    await server.register(homeRoutes, { prefix: '/' })
 
     await server.listen({ 
         host: '0.0.0.0', 
