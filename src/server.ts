@@ -1,45 +1,41 @@
-import { PrismaClient } from "@prisma/client";
-import fastify from "fastify";
-import cors from '@fastify/cors';
-import { z } from "zod";
+import { server } from './lib/fastify'
+import cors from '@fastify/cors'
+import {
+    serializerCompiler,
+    validatorCompiler
+} from 'fastify-type-provider-zod'
+import jwt from '@fastify/jwt'
+import { userRoutes } from './routes/user.routes'
 
-const app = fastify()
-const prisma = new PrismaClient()
-
-app.register(cors, { 
-    credentials: false,
-    methods: ["DELETE", "POST", "GET", "PUT", "OPTIONS", "PATCH"],
-})
-
-app.get('/', (req, reply) => { reply.send({message: 'hello'}) })
-
-app.get('/users', async () => {
-    const users = await prisma.user.findMany()
-
-    return { users }
-})
-
-
-app.post('/users', async (request, reply) => {
-    const createUserSchema = z.object({
-        name: z.string(),
-        email: z.string(),
+async function main() {
+    server.register(cors, { 
+        origin: true,
+        methods: ["GET","POST","PUT","DELETE","PATCH", "OPTIONS"]
     })
-    const { name, email } = createUserSchema.parse(request.body)
 
-    await prisma.user.create({
-        data: {
-            name,
-            email,
+    await server.register(jwt, {
+        secret: process.env.JWT_SECRET as string
+    })
+
+    server.setValidatorCompiler(validatorCompiler)
+    server.setSerializerCompiler(serializerCompiler)
+
+    server.setErrorHandler((error, request, reply) => {
+        const toSend = {
+            message: 'Validation error',
+            errors: JSON.parse(error.message),
+            statusCode: error.statusCode || 500
         }
+
+        reply.code(toSend.statusCode).send(toSend)
     })
 
-    return reply.status(201).send();
-})
+    await server.register(userRoutes, { prefix: '/users' })
 
-app.listen({
-    host: '0.0.0.0',
-    port: process.env.PORT ? Number(process.env.PORT) : 3333,
-}).then(() => {
-    console.log("HTTP Server Running");
-})
+    await server.listen({ 
+        host: '0.0.0.0', 
+        port: 3333 
+    })
+}
+
+main()
