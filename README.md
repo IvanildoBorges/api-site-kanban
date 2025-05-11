@@ -1,7 +1,7 @@
 # 📦 API Login Test
 
-**Resumo** <br>
-API REST simples para autenticação, criada com TypeScript, Fastify e Prisma.
+## Resumo
+API REST simples para autenticação, criada com TypeScript, Fastify e Prisma. Ideal para consumo por um frontend de login
 
 ---
 
