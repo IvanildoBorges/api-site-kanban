@@ -1,7 +1,7 @@
 # 📦 API Login Test
 
 **Resumo** <br>
-API REST simples para autenticação, criada com TypeScript, Fastify e Prisma. Ideal para consumo por um frontend de login.
+API REST simples para autenticação, criada com TypeScript, Fastify e Prisma. Ideal para consumo por um frontend de login
 
 ---
 
@@ -74,7 +74,7 @@ npm install @prisma/client
    ```
 
 5. **Configurar Variáveis de Ambiente**  
-   Edite o arquivo `.env`:
+   Crie e edite o arquivo `.env` com:
 
    ```
    DATABASE_URL="postgresql://root:senha@localhost:5432/siteKanban?schema=public"
