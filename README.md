@@ -1,90 +1,172 @@
-# api-login-test
-**Descrição do projeto** <br> 
-Api para o frontend login
+# 📦 API Login Test
 
-**Inicia o projeto**
-npm init
+API REST simples para autenticação, criada com TypeScript, Fastify e Prisma. Ideal para consumo por um frontend de login.
 
-**Dependencias para começo de projeto**
-_Typescript como linguagem padrão, tsx para executar a aplicação e tsup para fazer o build da aplicação_
+---
+
+## 🚀 Iniciando o Projeto
+
+```bash
+npm init -y
+```
+
+---
+
+## 📦 Instalação de Dependências
+
+### Dependências de Desenvolvimento:
+
+```bash
 npm install -D typescript @types/node tsx tsup
+```
 
-**Em seguida, cria uma pasta chamada de src**
-_Dentro da pasta src crie um arquivo chamando de server.ts_
-_Vai servir como o servidor da aplicação_
+- **TypeScript**: linguagem padrão do projeto.
+- **TSX**: executa arquivos `.ts`/`.tsx`.
+- **Tsup**: faz o build da aplicação.
 
-**Executa o tsc --init**
-_Para iniciar a configuração do typescript. Você pode configurar uma versão especifica do ES (ecmascript) no atributo target, no meu caso usei a versão es2020, pois o node suporta a maioria das features_
-npx tsc --init
+### Dependências de Produção:
 
-**Instalar a dependecia do Fastify**
-_Vamos utilizar o fastify como framework no node, poderia ser express, mas como vamos fazer só uma rota simples, já da pro gasto_
-npm i fastify
+```bash
+npm install fastify
+```
 
-**Instalar as dependencias do Prisma**
-_Vamos utilizar o Prisma com dependencia de desenvolvimento para acesso ao banco de dados._
-npm i prisma -D
+- **Fastify**: framework leve para Node.js.
 
-_E vamos utilizar o Prisma com dependencia de produção para operar o banco de dados através do servidor node_
-npm i @prisma/client
+### Prisma:
 
-**Criando a configuração do prisma**
-_Isso cria uma pasta Prisma com arquivo de configuração para o banco de dados_
-npx prisma init
+```bash
+npm install -D prisma
+npm install @prisma/client
+```
 
-**Criar model da tabela para ser usado no banco**
-_No arquivo schema.prisma cria uma model Task para guardar as atividades na tabela Task do banco_
+- **Prisma**: ORM para comunicação com o banco de dados.
 
-**Configurar variavel ambiente**
-_No arquivo .env editar a DATABASE_URL com a senha do seu usuario, no meu caso eu estou usando o usuário root (postgre) e sua senha, e logo após a port coloco o nome do banco siteKanban e usar o schema public mesmo_
+---
 
+## 🛠 Configuração do Projeto
 
-**Configurar o banco**
-_Vá para o postgresql e crie um banco de dados com o nome siteKanban_
-_Volte para o terminal do vscode e execute o codigo abaixo para fazer as alterações no banco de dados conforme foi feito na configuração do arquivo schema.prisma_
-npx prisma migrate dev
+1. **Criar pasta `src`**  
+   Dentro dela, crie o arquivo `server.ts` — será o ponto de entrada da aplicação.
 
-**Criar aplicação**
-_No arquivo server.ts import o fastify para poder criar a aplicação_
+2. **Inicializar TypeScript**  
+   ```bash
+   npx tsc --init
+   ```
+   - No `tsconfig.json`, altere o `target` para `es2020`.
 
-**Crir rotas**
-_Ainda no arquivo server.ts criaremos duas rotas para listar e criar as tasks_
+3. **Inicializar Prisma**  
+   ```bash
+   npx prisma init
+   ```
+   Isso criará a pasta `prisma` com o arquivo `schema.prisma`.
 
-**Pegar conexão com o banco**
-_Importar o prisma client para usar como conexão com o banco_
+4. **Criar Model**
+   No `schema.prisma`, defina o seguinte modelo:
 
-**Validar inputs**
-_Para saber se os valores das variaveis no body ou header são válidas e no tipo correto, usaremos a biblioteca Zod para validação_
+   ```prisma
+   model Task {
+     id        Int      @id @default(autoincrement())
+     title     String
+     completed Boolean  @default(false)
+     createdAt DateTime @default(now())
+   }
+   ```
 
-**Criar o server**
-_Usaremos o metodo listen do para o fastify escutar o host e a port que quisermos para iniciar o servidor_
+5. **Configurar Variáveis de Ambiente**  
+   Edite o arquivo `.env`:
 
-**Configurar o script para executar em desenvolvimento**
-_No arquivo package.json criaremos um script "dev" para poder executar o servidor_
-npm run dev
+   ```
+   DATABASE_URL="postgresql://root:senha@localhost:5432/siteKanban?schema=public"
+   ```
 
-**Especificando versão para o serviço de deploy**
-_As vezes os serviços de deplloy usar bibliotecas diferentes das que foram utilizadas no projeto, para resolver isso podemos usar uma propriedade no package.json chamada de "engines", é nela que especificamos nossa versão de determinada biblioteca usada no projeto. No meu caso, especifiquei que estou usando o nodejs na versão 19_
+---
 
-**Configurar o script para buildar**
-_No arquivo package.json criaremos um script "build" para poder criar a pasta com a aplicação em um arquivo com código em javascript puro, sem typescript_
-npm run build
+## 🗃 Configurar o Banco de Dados
 
-**Configurar o script para executar em produção**
-_No arquivo package.json criaremos um script "start" para poder executar a aplicação buildada. O serviço de host que vai se utilizar mais disso, para que ele entenda_
-npm start
+1. Crie um banco chamado `siteKanban` no PostgreSQL.
+2. Rode a migração:
 
-**Adicionar ignore**
-_No arquivo .gitignore vamos adicionar uma execessão para o git ignorar a pasta dist para quando formos subir a aplicação no repositório remoto_
+```bash
+npx prisma migrate dev --name init
+```
 
-**Deploy**
-_Cria conta no Fly.io ou render.com, no meu caso usei o render_
-_Usa a conta do GitHub mesmo para ter acesso aos repositorios_
-_Cria um novo banco de dados, usei o postgresql_
-_Cria um web service, vai em advanced e coloca a variavel ambiente com o link interno do postgresql que você criou. E também configure os comandos de build e start dessa forma, respectivamnte:_
-_npm ci && npm run build && npx prisma migrate deploy_
-_npm run start_
-_Depois configure as variaveis ambiente:_
-_banco de dados_ (DATABASE_URL) _com o link do banco postegre interno que você crio_
-_e token_ (JWT_SECRET) _com letras, números e simbolos de sua escolha, para ser sua chave de segurança do token, usada para criptografar e descriptografar os dados de token do back para o front_
-_Pronto! Você criou uma API REST_
+---
+
+## 🧱 Criando o Servidor
+
+No `src/server.ts`:
+
+1. Importe o Fastify.
+2. Importe o Prisma Client.
+3. Crie duas rotas básicas (listar e criar tasks).
+4. Use o método `listen()` para rodar o servidor.
+
+---
+
+## ✅ Validação de Dados
+
+Instale a biblioteca Zod:
+
+```bash
+npm install zod
+```
+
+Use-a para validar inputs do `body`, `params` ou `headers`.
+
+---
+
+## ⚙ Scripts do Projeto
+
+No `package.json`, adicione os scripts:
+
+```json
+"scripts": {
+  "dev": "tsx src/server.ts",
+  "build": "tsup src/server.ts --format esm --dts --out-dir dist",
+  "start": "node dist/server.js"
+}
+```
+
+---
+
+## 📌 Engines (Versão do Node)
+
+Adicione ao `package.json` para evitar incompatibilidades de ambiente:
+
+```json
+"engines": {
+  "node": "19.x"
+}
+```
+
+---
+
+## 🧹 Ignorar Arquivos no Git
+
+No `.gitignore`:
+
+```
+dist/
+.env
+```
+
+---
+
+## ☁️ Deploy no Render (ou Fly.io)
+
+1. Crie conta no [render.com](https://render.com/).
+2. Conecte com seu GitHub.
+3. Crie um banco PostgreSQL.
+4. Crie um Web Service.
+5. Configure as variáveis de ambiente:
+   - `DATABASE_URL`: string de conexão interna do banco.
+   - `JWT_SECRET`: string com letras, números e símbolos.
+6. Comandos de deploy:
+   - **Build**: `npm ci && npm run build && npx prisma migrate deploy`
+   - **Start**: `npm run start`
+
+---
+
+## ✅ Pronto!
+
+Sua API REST está no ar 🚀
